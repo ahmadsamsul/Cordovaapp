@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Barang</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="jquery.js">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                url: 'https://samsulcordova.000webhostapp.com/samsulcordova/rest_api.php?do=view',
+                method: 'GET',
+                dataType: 'JSON',
+                crossDomain: true,
+                cache: false,
+                success: function (data) {
+                    var xx = "";
+                    for (var i = 0; i < data['barang'].length; i++) {
+                        xx += '<tr><td>' + data['barang'][i]['idbarang'] +
+                            '</td><td>' + data['barang'][i]['namabarang'] +
+                            '</td><td>' + data['barang'][i]['jumlah'] +
+                            '</td><td>Rp. ' + data['barang'][i]['hargaperunit'] +
+                            '</td><td><a class="barangId" style="cursor: pointer;" data-id="' + data['barang'][i]['idbarang'] + '">Hapus Barang</a>' +
+                            '</td></tr>';
+                    }
+                    $('.show_data').html('');
+                    $('.show_data').html(xx);
+                },
+                error: function () {
+                    $('.show_data').html('Error');
+                }
+            });
+
+            function refresh()
+            {
+                $.ajax({
+                url: 'https://samsulcordova.000webhostapp.com/samsulcordova/rest_api.php?do=view',
+                method: 'GET',
+                dataType: 'JSON',
+                crossDomain: true,
+                cache: false,
+                success: function (data) {
+                    var xx = "";
+                    for (var i = 0; i < data['barang'].length; i++) {
+                        xx += '<tr><td>' + data['barang'][i]['idbarang'] +
+                            '</td><td>' + data['barang'][i]['namabarang'] +
+                            '</td><td>' + data['barang'][i]['jumlah'] +
+                            '</td><td>Rp. ' + data['barang'][i]['hargaperunit'] +
+                            '</td><td><a class="barangId" style="cursor: pointer;" data-id="' + data['barang'][i]['idbarang'] + '">Hapus Barang</a>' +
+                            '</td></tr>';
+                    }
+                    $('.show_data').html('');
+                    $('.show_data').html(xx);
+                },
+                error: function () {
+                    $('.show_data').html('Error');
+                }
+                });
+            }
+
+        $(document).on('click', '.barangId', function(){
+           var data = $(this).data();
+           var getId = data.id;
+
+           $.ajax({
+                url: 'https://samsulcordova.000webhostapp.com/samsulcordova/rest_api.php?do=delete&id=' + getId,
+                method: 'GET',
+                dataType: 'JSON',
+                crossDomain: true,
+                cache: false,
+                success: function (data) {
+                refresh();
+                alert("Data berhasil dihapus");
+                },
+                error: function () {
+                    alert("Error");
+                }
+            });
+        });
+        });
+    </script>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+  <!-- Brand -->
+  <a class="navbar-brand" href="index.html">Data Barang</a>
+
+  <!-- Toggler/collapsibe Button -->
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <!-- Navbar links -->
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">Beranda</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="insert.html">Masukkan Data</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID Barang</th>
+                <th scope="col">Nama Barang</th>
+                <th scope="col">Jumlah Barang</th>
+                <th scope="col">Harga Barang</th>
+                <th scope="col">Hapus Barang</th>
+            </tr>
+        </thead>
+        <tbody class="show_data">
+        </tbody>
+    </table>
+
+</body>
+
+</html>
